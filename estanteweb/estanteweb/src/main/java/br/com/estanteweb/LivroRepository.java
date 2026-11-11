@@ -1,12 +1,12 @@
 package br.com.estanteweb;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 // Missão 1.1: @Repository torna a classe um bean gerenciado pelo Spring
 @Repository
@@ -112,5 +112,22 @@ public class LivroRepository {
             livros.add(Livro.deMap(linha));
         }
         return livros;
+    }
+
+        // Altera UM livro. O WHERE id = ? garante que só essa linha muda.
+    public void atualizar(Livro livro) {
+        String sql = "UPDATE livro SET titulo = ?, autor = ?, ano = ?, preco = ? WHERE id = ?";
+        jdbcTemplate.update(sql,
+                livro.getTitulo(),
+                livro.getAutor(),
+                livro.getAno(),
+                livro.getPreco(),
+                livro.getId());
+    }
+
+    // Remove UM livro. Sem WHERE, apagaria a tabela inteira!
+    public void excluir(Long id) {
+        String sql = "DELETE FROM livro WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }
